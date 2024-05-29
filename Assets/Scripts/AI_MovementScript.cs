@@ -16,7 +16,7 @@ public class AI_Movement : MonoBehaviour
     public float walkCounter;
     float waitTime;
     public float waitCounter;
-    float rotationTime;
+    Quaternion rotationTime;
     int WalkDirection;
     Quaternion targetRotation;
     public bool isWalking;
@@ -29,7 +29,7 @@ public class AI_Movement : MonoBehaviour
         //So that all the prefabs don't move/stop at the same time
         walkTime = Random.Range(3,6);
         waitTime = Random.Range(5,7);
-        rotationTime = (0.3f);
+        rotationTime = targetRotation;
 
  
  
@@ -48,10 +48,10 @@ public class AI_Movement : MonoBehaviour
             walkCounter -= Time.deltaTime;
 
 
-            transform.localRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationTime -= Time.deltaTime);
+            transform.localRotation = Quaternion.Slerp(transform.rotation, targetRotation, 100);
             transform.position += transform.forward * moveSpeed * Time.deltaTime;
 
-        }
+        
             if (walkCounter <= 0)
             {
                 stopPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
@@ -64,10 +64,10 @@ public class AI_Movement : MonoBehaviour
             }
  
  
-        
+        }
         else
         {
- 
+
             waitCounter -= Time.deltaTime;
  
             if (waitCounter <= 0)
@@ -80,7 +80,7 @@ public class AI_Movement : MonoBehaviour
  
     public void ChooseDirection()
     {
-        targetRotation = Quaternion.Euler(Random.Range(0f, 0f), Random.Range(0f, 280f), 0f);
+        targetRotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
         isWalking = true;
         walkCounter = walkTime;
     }
