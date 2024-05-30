@@ -11,6 +11,7 @@ public class SelectionManager : MonoBehaviour
     public GameObject interaction_Info_UI;
     TextMeshProUGUI interaction_text;
     public float InteractRange = 10;
+    public float interaction_distance = 10;
 
     private void Start()
     {
@@ -21,20 +22,25 @@ public class SelectionManager : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        bool isHit = Physics.Raycast(ray, out hit, InteractRange);
+        bool isHit = Physics.Raycast(ray, out hit);
         if (isHit)
         {
             var selectionTransform = hit.transform;
  
-            if (selectionTransform.GetComponent<InteractableObject>())
+            if (selectionTransform.GetComponent<InteractableObject>() && selectionTransform.GetComponent<InteractableObject>().PlayerInRange)
             {
                 interaction_text.text = selectionTransform.GetComponent<InteractableObject>().GetItemName();
                 interaction_Info_UI.SetActive(true);
             }
-        }
+        
         else
         {
              interaction_Info_UI.SetActive(false);
         }
     }
+    else
+    {
+        interaction_Info_UI.SetActive(false);
+    }
+}
 }

@@ -4,11 +4,33 @@ using UnityEngine;
  
 public class InteractableObject : MonoBehaviour
 {
-    public string ItemName;
- 
-    public string GetItemName()
+
+public bool PlayerInRange;
+
+public string ItemName;
+
+public string GetItemName()
+{
+    return ItemName;
+}
+
+private void OnTriggerEnter(Collider other)
+{
+    if(other.CompareTag("Player"))
     {
-        return ItemName;
+        PlayerInRange = true;
     }
+}
+
+
+private void OnTriggerExit(Collider other)
+{
+    if(other.CompareTag("Player"))
+    {
+        PlayerInRange = false;
+    }
+}
+
+
 }
  
