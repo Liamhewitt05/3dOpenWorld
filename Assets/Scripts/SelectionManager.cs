@@ -7,15 +7,32 @@ using UnityEngine.UI;
  
 public class SelectionManager : MonoBehaviour
 {
+
+    public static SelectionManager Instance { get;set; }
+
+    public bool onTarget;
  
     public GameObject interaction_Info_UI;
     TextMeshProUGUI interaction_text;
-    public float InteractRange = 10;
-    public float interaction_distance = 10;
+    //public float InteractRange = 10;
+    public float isHit;
 
     private void Start()
     {
+        onTarget = false;
         interaction_text = interaction_Info_UI.GetComponent<TextMeshProUGUI>();
+    }
+
+    private void Awake()
+    {
+        if(Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
     }
  
     void Update()
@@ -23,24 +40,31 @@ public class SelectionManager : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         bool isHit = Physics.Raycast(ray, out hit);
+        // bool isHit = Physics.Raycast(ray, out hit, InteractRange);
         if (isHit)
         {
             var selectionTransform = hit.transform;
- 
-            if (selectionTransform.GetComponent<InteractableObject>() && selectionTransform.GetComponent<InteractableObject>().PlayerInRange)
+            var hitGameObject = selectionTransform.gameObject;
+            var hitInteractableObject = hitGameObject.GetComponent<InteractableObject>();
+            
+            if (hitInteractableObject && hitInteractableObject.PlayerInRange)
             {
-                interaction_text.text = selectionTransform.GetComponent<InteractableObject>().GetItemName();
+                onTarget = true;
+                // if (hitInteractableObject.CanCollect && Input.GetKeyDown(KeyCode.E) ) {
+                //     hitInteractableObject.AddToInventory();
+                // }
+                interaction_text.text = hitInteractableObject.GetItemName();
                 interaction_Info_UI.SetActive(true);
             }
-        
+            else
+            {
+                onTarget = false;
+                interaction_Info_UI.SetActive(false);
+            }
+        }
         else
         {
-             interaction_Info_UI.SetActive(false);
+            interaction_Info_UI.SetActive(false);
         }
     }
-    else
-    {
-        interaction_Info_UI.SetActive(false);
-    }
-}
 }

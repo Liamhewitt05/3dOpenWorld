@@ -1,36 +1,48 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
- 
+
 public class InteractableObject : MonoBehaviour
 {
+    public bool PlayerInRange;
+    // public bool CanCollect;
+    public string ItemName;
 
-public bool PlayerInRange;
-
-public string ItemName;
-
-public string GetItemName()
-{
-    return ItemName;
-}
-
-private void OnTriggerEnter(Collider other)
-{
-    if(other.CompareTag("Player"))
+    void Update()
     {
-        PlayerInRange = true;
+        if(Input.GetKeyDown(KeyCode.E) && PlayerInRange && SelectionManager.Instance.onTarget)
+        {
+            AddToInventory();
+        }
+    }
+
+
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Player"))
+        {
+            PlayerInRange = true;
+        }
+    }
+
+
+    void OnTriggerExit(Collider other)
+    {
+        if(other.CompareTag("Player"))
+        {
+            PlayerInRange = false;
+        }
+    }
+
+    public string GetItemName()
+    {
+        return ItemName;
+    }
+
+    public void AddToInventory() {
+        Debug.Log("item added to inventory");
+        Destroy(gameObject);
     }
 }
-
-
-private void OnTriggerExit(Collider other)
-{
-    if(other.CompareTag("Player"))
-    {
-        PlayerInRange = false;
-    }
-}
-
-
-}
+ 
  
